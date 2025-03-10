@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Form</title>
+    <style>
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 200px;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<h2>User Form</h2>
+<form id="userForm" onsubmit="saveUser(event)">
+    <input type="hidden" id="id" name="id">
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName"><br>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age"><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<script>
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    async function saveUser(event) {
+        event.preventDefault();
+
+        const id = document.getElementById('id').value;
+        const name = document.getElementById('name').value;
+        const lastName = document.getElementById('lastName').value;
+        const age = document.getElementById('age').value;
+
+        const userData = {
+            id: id,
+            name: name,
+            lastName: lastName,
+            age: parseInt(age)
+        };
+
+        const response = await fetch('/user/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        console.log("Server response:", response);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error:", errorText);
+            alert("Error saving user.");
+        }
+
+        if (response.ok) {
+            window.location.href = '/users';
+        } else {
+            alert("Error saving user.");
+        }
+    }
+
+    async function loadUserData() {
+        const userId = getParameterByName('id');
+        if (userId) {
+            const response = await fetch(`/user_data?id=${userId}`);
+            const user = await response.json();
+
+            document.getElementById('id').value = user.id;
+            document.getElementById('name').value = user.name;
+            document.getElementById('lastName').value = user.lastName;
+            document.getElementById('age').value = user.age;
+        }
+    }
+
+    loadUserData();
+</script>
+</body>
+</html>
