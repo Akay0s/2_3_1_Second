@@ -1,6 +1,5 @@
 package entry1.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,11 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -32,12 +34,6 @@ public class UserController {
         model.addAttribute("user", new User());
         return "users-form";
     }
-
-//    @PostMapping("/user/save")
-//    public String saveUser(@ModelAttribute("user") User user) {
-//        userService.save(user);
-//        return "redirect:/users";
-//    }
 
     @PostMapping("/user/save")
     public ResponseEntity<String> saveUser(@RequestBody User user) {

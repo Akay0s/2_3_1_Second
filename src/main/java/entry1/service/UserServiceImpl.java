@@ -1,6 +1,5 @@
 package entry1.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import entry1.dao.UserDao;
@@ -11,10 +10,15 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserDao userDao;
+
+    private final UserDao userDao;
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
+    @Transactional
     public void save(User user) {
         userDao.save(user);
     }
@@ -30,11 +34,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void update(User user) {
         userDao.update(user);
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         userDao.delete(userId);
     }
