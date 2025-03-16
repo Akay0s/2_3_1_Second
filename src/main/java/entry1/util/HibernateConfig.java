@@ -17,7 +17,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class HibernateConfig {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/firstdb?useSSL=false&serverTimezone=UTC";//jdbc:mysql://localhost:3306/firstdb?useSSL=false&serverTimezone=UTC
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/firstdb";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "@ppleBIBL325";
 
